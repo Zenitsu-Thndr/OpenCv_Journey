@@ -2,7 +2,7 @@ import cv2
 import os
 
 folder = "images/"
-filename = "loki.jpg"
+filename = "spider_man.jpg"
 
 image = cv2.imread(folder + filename)
 
