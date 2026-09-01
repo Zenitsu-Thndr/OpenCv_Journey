@@ -36,8 +36,9 @@ cv2.imshow("Saturation", s)
 cv2.imshow("Value", v)
 '''
 
+##HSV MASK
 
-
+'''
 lower_green = np.array([35, 50, 50])
 upper_green = np.array([85, 255, 255])
 
@@ -47,7 +48,7 @@ mask = cv2.inRange(hsv, lower_green, upper_green)
 
 cv2.imshow("Original", image)
 cv2.imshow("Mask", mask)
-
+'''
 
 
 
