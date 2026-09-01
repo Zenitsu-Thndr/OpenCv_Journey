@@ -10,6 +10,7 @@ blue, green, red = cv2.split(image)
 
 # cv2.imshow("Original", image)
 
+##BGR
 
 # cv2.imshow("Blue", blue)
 # cv2.imshow("Green", green)
@@ -17,13 +18,21 @@ blue, green, red = cv2.split(image)
 
 
 # blue[:] = cv2.add(green, 50)
-blue[:] = green
+# blue[:] = green
 
 # blue[:] = cv2.addWeighted(blue, 0.5, green, 0.5, 0)
 
-modified = cv2.merge([blue, green, red])
+# modified = cv2.merge([blue, green, red])
 
-cv2.imshow("Modified", modified)
+##HSV
+
+hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+h, s, v = cv2.split(hsv)
+
+cv2.imshow("Hue", h)
+cv2.imshow("Saturation", s)
+cv2.imshow("Value", v)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
