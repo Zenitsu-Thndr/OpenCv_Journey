@@ -38,17 +38,23 @@ cv2.imshow("Value", v)
 
 ##HSV MASK
 
-'''
+
 lower_green = np.array([35, 50, 50])
 upper_green = np.array([85, 255, 255])
 
 mask = cv2.inRange(hsv, lower_green, upper_green)
 
-# result = cv2.bitwise_and(image, image, mask=mask)
+kernal = np.ones((5,5), np.uint8)
+
+
+mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel= kernal)
+mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel= kernal)
+
+result = cv2.bitwise_and(image, image, mask=mask)
 
 cv2.imshow("Original", image)
-cv2.imshow("Mask", mask)
-'''
+cv2.imshow("Mask", result)
+
 
 
 
