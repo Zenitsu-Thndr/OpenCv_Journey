@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 #importing image
-image = cv2.imread("03_Image_Translation/images/loki.jpg")
+image = cv2.imread("04_Image_Translation/images/loki.jpg")
 
 
 blue, green, red = cv2.split(image)
