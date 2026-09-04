@@ -44,20 +44,54 @@ upper_green = np.array([85, 255, 255])
 
 mask = cv2.inRange(hsv, lower_green, upper_green)
 
-kernal = np.ones((5,5), np.uint8)
+# kernal = np.ones((5,5), np.uint8)
 
 
-mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel= kernal)
-mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel= kernal)
+# mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel= kernal)
+# mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel= kernal)
 
-result = cv2.bitwise_and(image, image, mask=mask)
+# result = cv2.bitwise_and(image, image, mask=mask)
 
-cv2.imshow("Original", image)
-cv2.imshow("Mask", result)
-
-
+# cv2.imshow("Original", image)
+# cv2.imshow("Mask", result)
 
 
+##CONTOURS
+contours, hierarchy = cv2.findContours(
+    mask,
+    cv2.RETR_EXTERNAL,
+    cv2.CHAIN_APPROX_SIMPLE
+)
+
+# print("Number of contours:", len(contours))
+
+''' DRAWING CONTOURS and BOUNDING BOX
+
+output = image.copy()
+
+# cv2.drawContours(
+#     output,
+#     contours,
+#     -1,
+#     (0, 255, 0),
+#     2
+# )
+
+
+for contour in contours:
+    x, y, w, h = cv2.boundingRect(contour)
+
+    cv2.rectangle(
+        output,
+        (x, y),
+        (x + w, y + h),
+        (0, 0, 255),
+        2
+    )
+
+
+cv2.imshow("Contours", output)
+'''
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
