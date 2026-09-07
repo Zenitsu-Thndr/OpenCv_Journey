@@ -7,6 +7,64 @@ if not cap.isOpened():
     print("Could not open camera")
     exit()
 
+
+
+colors = {
+    "RED": [
+        (np.array([0, 50, 50]), np.array([10, 255, 255])),
+        (np.array([170, 50, 50]), np.array([179, 255, 255]))
+    ],
+
+    "GREEN": [
+        (np.array([35, 50, 50]), np.array([85, 255, 255]))
+    ],
+
+    "BLUE": [
+        (np.array([90, 50, 50]), np.array([130, 255, 255]))
+    ],
+
+    "BLACK": [
+        (np.array([0, 0, 0]), np.array([179, 255, 50]))
+    ]
+}
+
+
+def detect_color(frame, hsv, color_name, ranges, box_color):
+    for lower, upper in ranges:
+        mask = cv2.inRange(hsv, lower, upper)
+
+        contours, _ = cv2.findContours(
+            mask,
+            cv2.RETR_EXTERNAL,
+            cv2.CHAIN_APPROX_SIMPLE
+        )
+
+        for contour in contours:
+            area = cv2.contourArea(contour)
+
+            if area > 500:
+                x, y, w, h = cv2.boundingRect(contour)
+
+                cv2.rectangle(
+                    frame,
+                    (x, y),
+                    (x + w, y + h),
+                    box_color,
+                    2
+                )
+
+                cv2.putText(
+                    frame,
+                    color_name,
+                    (x, y - 10),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.7,
+                    box_color,
+                    2
+                )
+
+
+
 while True:
     ret, frame = cap.read()
 
@@ -16,40 +74,38 @@ while True:
 
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-    lower_red1 = np.array([0, 50, 50])
-    upper_red1 = np.array([10, 255, 255])
-    
-    lower_red2 = np.array([170, 50, 50])
-    upper_red2 = np.array([179, 255, 255])
-    
-    mask1 = cv2.inRange(hsv, lower_red1, upper_red1)
-    mask2 = cv2.inRange(hsv, lower_red2, upper_red2)
-    
-    mask = cv2.bitwise_or(mask1, mask2)
-
-
-    contours, _ = cv2.findContours(
-        mask,
-        cv2.RETR_EXTERNAL,
-        cv2.CHAIN_APPROX_SIMPLE
+    detect_color(
+        frame,
+        hsv,
+        "RED",
+        colors["RED"],
+        (0, 0, 255)
     )
 
-    for contour in contours:
-        area = cv2.contourArea(contour)
+    detect_color(
+        frame,
+        hsv,
+        "GREEN",
+        colors["GREEN"],
+        (0, 255, 0)
+    )
 
-        if area > 500:
-            x, y, w, h = cv2.boundingRect(contour)
+    detect_color(
+        frame,
+        hsv,
+        "BLUE",
+        colors["BLUE"],
+        (255, 0, 0)
+    )
 
-            cv2.rectangle(
-                frame,
-                (x, y),
-                (x + w, y + h),
-                (0, 255, 0),
-                2
-            )
+    detect_color(
+        frame,
+        hsv,
+        "BLACK",
+        colors["BLACK"],
+        (0, 0, 0)
+    )
 
-
-    # result = cv2.bitwise_and(frame, frame, mask=mask)
 
     cv2.imshow("Color Detector", frame)
 
