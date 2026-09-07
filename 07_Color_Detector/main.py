@@ -26,9 +26,32 @@ while True:
     mask2 = cv2.inRange(hsv, lower_red2, upper_red2)
     
     mask = cv2.bitwise_or(mask1, mask2)
-    result = cv2.bitwise_and(frame, frame, mask=mask)
 
-    cv2.imshow("Color Detector", result)
+
+    contours, _ = cv2.findContours(
+        mask,
+        cv2.RETR_EXTERNAL,
+        cv2.CHAIN_APPROX_SIMPLE
+    )
+
+    for contour in contours:
+        area = cv2.contourArea(contour)
+
+        if area > 500:
+            x, y, w, h = cv2.boundingRect(contour)
+
+            cv2.rectangle(
+                frame,
+                (x, y),
+                (x + w, y + h),
+                (0, 255, 0),
+                2
+            )
+
+
+    # result = cv2.bitwise_and(frame, frame, mask=mask)
+
+    cv2.imshow("Color Detector", frame)
 
     key = cv2.waitKey(1) & 0xFF
 
