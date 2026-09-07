@@ -7,16 +7,17 @@ canvas = np.zeros((600, 800, 3), dtype=np.uint8)
 drawing = False
 previous_point = None
 color = (255, 255, 255)
+brush_size = 3
 
 def mouse_event(event, x, y, flags, param):
-    global drawing, previous_point, color
+    global drawing, previous_point, color, brush_size
 
     if event == cv2.EVENT_LBUTTONDOWN:
         drawing = True
         previous_point = (x, y)
 
     elif event == cv2.EVENT_MOUSEMOVE and drawing:
-        cv2.line(canvas, previous_point, (x, y), color, 3)
+        cv2.line(canvas, previous_point, (x, y), color, brush_size)
         previous_point = (x, y)
 
     elif event == cv2.EVENT_LBUTTONUP:
@@ -34,19 +35,25 @@ while True:
 
     if key == ord("r"):
         color = (0, 0, 255)
-    
+
     elif key == ord("g"):
         color = (0, 255, 0)
-    
+
     elif key == ord("b"):
         color = (255, 0, 0)
-    
+
     elif key == ord("w"):
         color = (255, 255, 255)
-    
+
     elif key == ord("c"):
         canvas[:] = 0
-    
+
+    elif key == ord("+"):
+        brush_size += 2
+
+    elif key == ord("-"):
+        brush_size = max(1, brush_size - 2)
+
     elif key == ord("q"):
         break
 
