@@ -1,5 +1,6 @@
 import cv2
 import mediapipe as mp
+import numpy as np
 
 mp_hands = mp.solutions.hands
 mp_draw = mp.solutions.drawing_utils
@@ -22,12 +23,19 @@ smooth_x = 0
 smooth_y = 0
 smoothing = 0.3
 
+canvas = None
+
 while True:
 
     ret, frame = cap.read()
 
     if not ret:
         break
+
+
+    if canvas is None:
+        canvas = np.zeros_like(frame)
+
 
     rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
@@ -41,6 +49,7 @@ while True:
         index_tip = hand.landmark[8]
 
         height, width = frame.shape[:2]
+
 
         x = int(index_tip.x * width)
         y = int(index_tip.y * height)
@@ -59,6 +68,8 @@ while True:
         
         if drawing:
             points.append(smooth_point)
+        else:
+            points.append(None)
 
         
 
@@ -84,20 +95,27 @@ while True:
 
     # Draw the path
     for i in range(1, len(points)):
+
+        if points[i - 1] is None or points[i] is None:
+            continue
+
         cv2.line(
-            frame,
+            canvas,
             points[i - 1],
             points[i],
             (0, 255, 0),
             3
         )
 
-    cv2.imshow("Air Drawing", frame)
+    display = cv2.add(frame, canvas)
+
+    cv2.imshow("Air Drawing", display)
 
     key = cv2.waitKey(1) & 0xFF
 
     if key == ord("c"):
         points.clear()
+        canvas[:] = 0
 
     if key == ord("q"):
         break
